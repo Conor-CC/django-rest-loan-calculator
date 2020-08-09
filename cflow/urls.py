@@ -19,5 +19,5 @@ from cflow.loanCalc import urls as calc_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('loanCalc/', include(calc_urls)),
+    path('loanCalc/', include(calc_urls))
 ]
