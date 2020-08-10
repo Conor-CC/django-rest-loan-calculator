@@ -1,8 +1,8 @@
-from cflow.loanCalc.models import MonthlyRepaymentCalc, RepaymentCountCalc
-from cflow.loanCalc.serializers import MonthlyRepaymentsSerializer, RepaymentCountsSerializer
-from cflow.loanCalc.serializers import CalcMonthlyRepaymentSerializer, CalcRepaymentCountSerializer
+from cflow.loanCalc.models import MonthlyRepaymentCalc, RepaymentCountCalc, InterestRateCalc
+from cflow.loanCalc.serializers import MonthlyRepaymentsSerializer, RepaymentCountsSerializer, InterestRatesSerializer
+from cflow.loanCalc.serializers import CalcMonthlyRepaymentSerializer, CalcRepaymentCountSerializer, CalcInterestRateSerializer
 from cflow.loanCalc.config import CalculationSettings as cs
-from cflow.loanCalc.calculators import calcMonthlyRepayments, calcRepaymentCount
+from cflow.loanCalc.calculators import calcMonthlyRepayments, calcRepaymentCount, isInterestAboveThreshold
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -16,6 +16,8 @@ def api_root(request, format=None):
         'monthly-repayment-list': reverse('list-monthly-repayment',
                                           request=request, format=format),
         'repayment-count-list': reverse('list-repayment-count',
+                                        request=request, format=format),
+        'interest-rate-list': reverse('list-interest-rate',
                                         request=request, format=format),
     })
 
@@ -33,7 +35,7 @@ class CalcMonthlyRepayments(APIView):
         if serializer.is_valid(raise_exception=True):
             loan_amount = serializer.validated_data["loan_amount"]
             no_repayments = serializer.validated_data["no_repayments"]
-            calc = calcMonthlyRepayments(loan_amount, no_repayments)
+            calc = calcMonthlyRepayments(float(loan_amount), no_repayments)
             req_status = status.HTTP_200_OK
 
             if cs['monthly_repayment_calc']['save_results']:
@@ -56,9 +58,8 @@ class CalcRepaymentCount(APIView):
         serializer = CalcRepaymentCountSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             loan_amount = serializer.validated_data["loan_amount"]
-            monthly_repayment_amount = serializer.validated_data["monthly_repayment_amount"]
-            calc = calcRepaymentCount(loan_amount, monthly_repayment_amount)
-            print(calc)
+            monthly_repayment = serializer.validated_data["monthly_repayment_amount"]
+            calc = calcRepaymentCount(float(loan_amount), float(monthly_repayment))
             req_status = status.HTTP_200_OK
 
             if cs['repayment_count_calc']['save_results']:
@@ -68,6 +69,39 @@ class CalcRepaymentCount(APIView):
             return Response({'result': calc},
                             status=req_status)
 
+
+class CalcInterestRate(APIView):
+    """
+    Calculates the interest rate of a loan based on the Loan Amount (Principal),
+    the number of repayments (Periods) and the Monthly Payment Amount. This result
+    is cross checked with a preconfigured minimum interest threshold.
+    """
+
+    def post(self, request, format=None):
+        threshold_used = cs['interest_rate_calc']['threshold']
+        request.data['threshold_used'] = threshold_used
+        serializer = CalcInterestRateSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            loan_amount = serializer.validated_data["loan_amount"]
+            no_repayments = serializer.validated_data["no_repayments"]
+            monthly_repayment = serializer.validated_data["monthly_repayment_amount"]
+            calc, above_threshold = isInterestAboveThreshold(
+                                                            float(loan_amount),
+                                                            no_repayments,
+                                                            float(monthly_repayment),
+                                                            threshold_used
+                                                            )
+            req_status = status.HTTP_200_OK
+            if cs['interest_rate_calc']['save_results']:
+                serializer.save(interest_rate_annual=calc,
+                                threshold_used=0.1,
+                                above_threshold=above_threshold)
+                req_status = status.HTTP_201_CREATED
+
+            return Response({'above_threshold': above_threshold,
+                             'interest_rate_annual': calc,
+                             'threshold_used': threshold_used},
+                            status=req_status)
 
 # List Views
 
@@ -88,12 +122,20 @@ class ListRepaymentCounts(generics.ListAPIView):
     serializer_class = RepaymentCountsSerializer
 
 
+class ListInterestRates(generics.ListAPIView):
+    """
+    List all stored 'Interest Rate' Calculations
+    """
+    queryset = InterestRateCalc.objects.all()
+    serializer_class = InterestRatesSerializer
+
+
 # Retrieve Views
 
 
 class RetrieveMonthlyRepayment(generics.RetrieveAPIView):
     """
-    Retrieve an individual stored 'Monthly Repayment' Calculation
+    Retrieve a stored 'Monthly Repayment' Calculation
     """
     queryset = MonthlyRepaymentCalc.objects.all()
     serializer_class = MonthlyRepaymentsSerializer
@@ -101,7 +143,15 @@ class RetrieveMonthlyRepayment(generics.RetrieveAPIView):
 
 class RetrieveRepaymentCount(generics.RetrieveAPIView):
     """
-    Retrieve an individual stored 'Repayment Count' Calculation
+    Retrieve a stored 'Repayment Count' Calculation
     """
     queryset = RepaymentCountCalc.objects.all()
     serializer_class = RepaymentCountsSerializer
+
+
+class RetrieveInterestRate(generics.RetrieveAPIView):
+    """
+    Retrieve a stored 'Interest Rate' Calculation
+    """
+    queryset = InterestRateCalc.objects.all()
+    serializer_class = InterestRatesSerializer
