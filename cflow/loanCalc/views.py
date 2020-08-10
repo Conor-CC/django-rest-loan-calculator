@@ -1,8 +1,8 @@
 from cflow.loanCalc.models import MonthlyRepaymentCalc, RepaymentCountCalc, InterestRateCalc
 from cflow.loanCalc.serializers import MonthlyRepaymentsSerializer, RepaymentCountsSerializer, InterestRatesSerializer
 from cflow.loanCalc.serializers import CalcMonthlyRepaymentSerializer, CalcRepaymentCountSerializer, CalcInterestRateSerializer
-from cflow.loanCalc.config import CalculationSettings as cs
 from cflow.loanCalc.calculators import calcMonthlyRepayments, calcRepaymentCount, isInterestAboveThreshold
+from cflow.loanCalc.config import CalculationSettings as cs
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -41,9 +41,7 @@ class CalcMonthlyRepayments(APIView):
             if cs['monthly_repayment_calc']['save_results']:
                 serializer.save(monthly_repayment_amount=calc)
                 req_status = status.HTTP_201_CREATED
-            # calc must be used in the Response instead of addressing the
-            # serializer.data attribute as 'monthly_repayment_amount' will not
-            # always be present i.e if results are not saved to database.
+
             return Response({'result': "{:.2f}".format(calc)},
                             status=req_status)
 
