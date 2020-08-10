@@ -29,3 +29,70 @@ def calcRepaymentCount(loan_amount, monthly_repayment_amount):
     denominator = math.log(1 + monthly_interest)
     result = numerator / denominator
     return int(round(result))
+
+
+# Interest_Above_Threshold if Interest_Threshold < Calculated_Annual_Interest
+# Calculated_Annual_Interest =
+
+def isInterestAboveThreshold(loan_amount, no_repayments,
+                             monthly_repayment_amount,
+                             threshold):
+    print(loan_amount)
+    print(no_repayments)
+    print(monthly_repayment_amount)
+    rate = calcInterestRate(loan_amount, no_repayments,
+                            monthly_repayment_amount)
+    print(rate)
+    return (round(rate, 7), (rate > threshold))
+
+
+# Blog post here was incredibly helpful for Interest rate calculation:
+# https://blog.bossylobster.com/2012/05/reverse-calculating-interest-rate
+# Mathematical Explanation of Newton Raphson Method:
+# https://mathworld.wolfram.com/NewtonsMethod.html
+
+def newtonRaphson(approximation, f, f_prime):
+    def nextValue(val):
+        return val - f(val) * 1.0 / f_prime(val)
+
+    current = approximation
+    while abs(f(current)) > 10 ** (-8):
+        current = nextValue(current)
+
+    return current
+
+
+def calcInterestRate(loan_amount, no_repayments, monthly_repayment_amount):
+    f, f_prime = genPolynomials(loan_amount, no_repayments,
+                                monthly_repayment_amount)
+    approximation = m(0.1)
+    result = newtonRaphson(approximation, f, f_prime)
+    return m_inverse(result)
+
+
+def m(r):
+    return 1 + r / 12.0
+
+
+def m_inverse(m_value):
+    return 12.0 * (m_value - 1)
+
+
+def genPolynomials(loan_amount, no_repayments, monthly_repayment_amount):
+    def f(m):
+        return (
+                (loan_amount * (m ** (no_repayments + 1)))
+                - (loan_amount + monthly_repayment_amount)
+                * (m ** no_repayments)
+                + monthly_repayment_amount
+                )
+
+    def f_prime(m):
+        return (
+                loan_amount * (no_repayments + 1) * (m ** no_repayments)
+                - (loan_amount + monthly_repayment_amount)
+                * no_repayments
+                * (m ** (no_repayments - 1))
+                )
+
+    return (f, f_prime)
