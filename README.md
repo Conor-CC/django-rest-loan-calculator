@@ -47,7 +47,7 @@ pip install virtualenv # If not already installed
 python -m venv env
 source env/bin/activate
 pip install -r requirements.txt
-python manage.py migrate
+python manage.py migrate --run-syncdb
 python manage.py createsuperuser # Enables access to Admin Panel
 python manage.py runserver
 ```
