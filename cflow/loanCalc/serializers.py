@@ -1,13 +1,13 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from cflow.loanCalc.models import MonthlyRepaymentCalc, RepaymentCountCalc
+from cflow.loanCalc.models import MonthlyRepaymentCalc, RepaymentCountCalc, InterestRateCalc
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Calculation Serializers
 
 
 class CalcMonthlyRepaymentSerializer(serializers.ModelSerializer):
-    loan_amount = serializers.DecimalField(max_digits=6, decimal_places=2,
+    loan_amount = serializers.DecimalField(max_digits=10, decimal_places=2,
                                            validators=[MinValueValidator(750),
                                                        MaxValueValidator(100000)
                                                        ])
@@ -22,11 +22,11 @@ class CalcMonthlyRepaymentSerializer(serializers.ModelSerializer):
 
 
 class CalcRepaymentCountSerializer(serializers.ModelSerializer):
-    loan_amount = serializers.DecimalField(max_digits=6, decimal_places=2,
+    loan_amount = serializers.DecimalField(max_digits=10, decimal_places=2,
                                            validators=[MinValueValidator(750),
                                                        MaxValueValidator(100000)
                                                        ])
-    monthly_repayment_amount = serializers.DecimalField(max_digits=6,
+    monthly_repayment_amount = serializers.DecimalField(max_digits=10,
                                                         decimal_places=2)
 
     class Meta:
@@ -35,12 +35,29 @@ class CalcRepaymentCountSerializer(serializers.ModelSerializer):
                   'no_repayments']
 
 
+class CalcInterestRateSerializer(serializers.ModelSerializer):
+    loan_amount = serializers.DecimalField(max_digits=10, decimal_places=2,
+                                           validators=[MinValueValidator(750),
+                                                       MaxValueValidator(100000)
+                                                       ])
+    monthly_repayment_amount = serializers.DecimalField(max_digits=10,
+                                                        decimal_places=2)
+    no_repayments = serializers.IntegerField(validators=[MinValueValidator(1),
+                                                         MaxValueValidator(1000)
+                                                         ])
+    threshold_used = serializers.FloatField(validators=[MinValueValidator(0),
+                                                        MaxValueValidator(1)])
+
+    class Meta:
+        model = InterestRateCalc
+        fields = ['loan_amount', 'monthly_repayment_amount',
+                  'no_repayments', 'interest_rate_annual', 'threshold_used',
+                  'above_threshold']
+
+
 # List Serializers
 
 class MonthlyRepaymentsSerializer(serializers.ModelSerializer):
-    loan_amount = serializers.DecimalField(max_digits=6, decimal_places=2)
-    no_repayments = serializers.IntegerField()
-    monthly_repayment_amount = serializers.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
         model = MonthlyRepaymentCalc
@@ -49,11 +66,17 @@ class MonthlyRepaymentsSerializer(serializers.ModelSerializer):
 
 
 class RepaymentCountsSerializer(serializers.ModelSerializer):
-    loan_amount = serializers.DecimalField(max_digits=6, decimal_places=2)
-    monthly_repayment_amount = serializers.DecimalField(max_digits=6, decimal_places=2)
-    no_repayments = serializers.IntegerField()
 
     class Meta:
         model = RepaymentCountCalc
         fields = ['id', 'created', 'loan_amount', 'monthly_repayment_amount',
                   'no_repayments']
+
+
+class InterestRatesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InterestRateCalc
+        fields = ['id', 'created', 'loan_amount', 'monthly_repayment_amount',
+                  'no_repayments', 'interest_rate_annual', 'threshold_used',
+                  'above_threshold']
