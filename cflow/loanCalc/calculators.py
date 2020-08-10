@@ -32,7 +32,8 @@ def calcRepaymentCount(loan_amount, monthly_repayment_amount):
 
 
 # Interest_Above_Threshold if Interest_Threshold < Calculated_Annual_Interest
-# Calculated_Annual_Interest =
+# Blog post here was incredibly helpful for Interest rate calculation:
+# https://blog.bossylobster.com/2012/05/reverse-calculating-interest-rate
 
 def isInterestAboveThreshold(loan_amount, no_repayments,
                              monthly_repayment_amount,
@@ -46,9 +47,7 @@ def isInterestAboveThreshold(loan_amount, no_repayments,
     return (round(rate, 7), (rate > threshold))
 
 
-# Blog post here was incredibly helpful for Interest rate calculation:
-# https://blog.bossylobster.com/2012/05/reverse-calculating-interest-rate
-# Mathematical Explanation of Newton Raphson Method:
+# Explanation of Newton Raphson Method:
 # https://mathworld.wolfram.com/NewtonsMethod.html
 
 def newtonRaphson(approximation, f, f_prime):
