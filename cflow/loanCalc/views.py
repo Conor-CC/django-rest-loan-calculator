@@ -133,7 +133,7 @@ class ListInterestRates(generics.ListAPIView):
 # Retrieve Views
 
 
-class RetrieveMonthlyRepayment(generics.RetrieveAPIView):
+class RetrieveMonthlyRepayment(generics.RetrieveDestroyAPIView):
     """
     Retrieve a stored 'Monthly Repayment' Calculation
     """
@@ -141,7 +141,7 @@ class RetrieveMonthlyRepayment(generics.RetrieveAPIView):
     serializer_class = MonthlyRepaymentsSerializer
 
 
-class RetrieveRepaymentCount(generics.RetrieveAPIView):
+class RetrieveRepaymentCount(generics.RetrieveDestroyAPIView):
     """
     Retrieve a stored 'Repayment Count' Calculation
     """
@@ -149,7 +149,7 @@ class RetrieveRepaymentCount(generics.RetrieveAPIView):
     serializer_class = RepaymentCountsSerializer
 
 
-class RetrieveInterestRate(generics.RetrieveAPIView):
+class RetrieveInterestRate(generics.RetrieveDestroyAPIView):
     """
     Retrieve a stored 'Interest Rate' Calculation
     """
