@@ -18,4 +18,11 @@ urlpatterns = [
          name='retrieve-repayment-count'),
     path('repayment-count-list/', views.ListRepaymentCounts.as_view(),
          name='list-repayment-count'),
+
+    path('interest-rate/', views.CalcInterestRate.as_view(),
+         name='calc-interest-rate'),
+    path('interest-rate/<int:pk>', views.RetrieveInterestRate.as_view(),
+         name='retrieve-interest-rate'),
+    path('interest-rate-list/', views.ListInterestRates.as_view(),
+         name='list-interest-rate'),
 ]
