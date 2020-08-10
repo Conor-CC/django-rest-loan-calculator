@@ -77,7 +77,7 @@ available.
   all stored Monthly Repayment Calculations & Results
 - **localhost:8000/loan-calc/monthly-repayment/<id>** *(GET)*: Retrieves an individual
   Monthly Repayment Calculation & Result by id (ids can be found with the **monthly-repayment-list**
-  endpoint above).
+  endpoint above), can also be used for deletion
 
 ### Repayment Count Calculator
 Three endpoints for Requesting, Listing and Retrieving Repayment Count Calculations are
@@ -94,7 +94,7 @@ available.
   all stored Repayment Count Calculations & Results
 - **localhost:8000/loan-calc/repayment-count/<id>** *(GET)*: Retrieves an individual
   Repayment Count Calculation & Result by id (ids can be found with the **repayment-count-list**
-  endpoint above).
+  endpoint above), can also be used for deletion
 
 ### Interest Rate Calculator
 Three endpoints for Requesting, Listing and Retrieving Monthly Repayment Calculations are
@@ -103,9 +103,9 @@ available.
   calculation with the following paramaters included in the body (given as json)
   ```json
   {
-  	"loan_amount": "100000",
-  	"no_repayments": "360",
-  	"monthly_repayment_amount": "665.30"
+    "loan_amount": "90000",
+  	"no_repayments": "380",
+  	"monthly_repayment_amount": "690.40"
   }
   ```
   Returns a response like so:
@@ -120,4 +120,4 @@ available.
   all stored Interest Rate Calculations & Results
 - **localhost:8000/loan-calc/interest-rate/<id>** *(GET)*: Retrieves an individual
   Interest Rate Calculation & Result by id (ids can be found with the **repayment-count-list**
-  endpoint above).
+  endpoint above), can also be used for deletion
