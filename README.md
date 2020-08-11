@@ -1,7 +1,6 @@
 # **Django REST Loan Calculator Application for Capitalflow**
 
-Django REST Loan Calculator Application is used for the resolution and storage
-of the following calculations/operations pertaining to loans:
+Django REST Loan Calculator Application is used for the resolution and storage of the following calculations/operations pertaining to loans:
 
 - **Monthly Repayment Calculator**, based on the Principal (loan_amount) and number
   of repayment Periods (no_repayments). Based on the Annuity Formula.
@@ -16,7 +15,8 @@ All of these functions are implemented in `cflow/loanCalc/calculators.py` and
 can have their parameters tweaked by modifying `cflow/loanCalc/config.py`. This
 configuration file also allows for the specification of whether or not the result
 of a certain calculation should be saved to the database or not with the 'save_results'
-configuration option as seen below.
+configuration option as seen below. Please note that the work under the `sample-UI/` directory is
+a still in progress.
 
 ```python
 # cflow/loanCalc/config.py
