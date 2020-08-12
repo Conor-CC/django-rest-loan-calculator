@@ -38,12 +38,8 @@ def calcRepaymentCount(loan_amount, monthly_repayment_amount):
 def isInterestAboveThreshold(loan_amount, no_repayments,
                              monthly_repayment_amount,
                              threshold):
-    print(loan_amount)
-    print(no_repayments)
-    print(monthly_repayment_amount)
     rate = calcInterestRate(loan_amount, no_repayments,
                             monthly_repayment_amount)
-    print(rate)
     return (round(rate, 7), (rate > threshold))
 
 
