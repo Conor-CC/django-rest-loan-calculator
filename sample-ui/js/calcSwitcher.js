@@ -1,4 +1,10 @@
 $(document).ready(() => {
+
+  $('#dropdown-menu').on('show.bs.dropdown', function () {
+    $('[data-toggle-second="tooltip"]').tooltip('hide')
+    $('#content-window').attr('style', 'filter: blur(4px); -webkit-filter: blur(4px);');
+  });
+
   $('#monthly-repayment-selector').on('click', function(){
     let attr = $("#monthly-repayment-content").attr("class");
     if (attr.indexOf("d-none") > -1) {
