@@ -10,13 +10,21 @@ $(document).ready(() => {
 
     $('#interest-principal-submit').on('click', function(){
 
+      $('#interest-results-pane').attr('class', 'd-none');
+      $('#interest-starter-pane').attr('class', 'd-none');
+      $('#interest-spinner').attr('class', 'card-body');
 
+      function showResults() {
+        $('#interest-spinner').attr('class', 'd-none');
 
-      $('#interest-results-pane').attr('class', 'card-body');
-      $('#interest-starter-pane').attr('class', 'card-body d-none');
+        $('#interest-results-pane').attr('class', 'card-body');
 
-      $('#interest-pv-used').html($('#interest-range').val());
-      $('#interest-np-used').html($('#interest-period-val').val());
-      $('#interest-mr-used').html($('#interest-repayment-val').val());
+        $('#interest-pv-used').html($('#interest-range').val());
+        $('#interest-np-used').html($('#interest-period-val').val());
+        $('#interest-mr-used').html($('#interest-repayment-val').val());
+      }
+
+      setTimeout(showResults, 350)
+
     });
 });

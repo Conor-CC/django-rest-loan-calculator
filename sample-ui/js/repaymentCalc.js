@@ -9,10 +9,21 @@ $(document).ready(() => {
     });
 
     $('#repayment-principal-submit').on('click', function(){
-      $('#repayment-results-pane').attr('class', 'card-body');
-      $('#repayment-starter-pane').attr('class', 'card-body d-none');
 
-      $('#repayment-pv-used').html($('#repayment-range').val());
-      $('#repayment-mr-used').html($('#monthly-repayment-val').val());
+      $('#repayment-results-pane').attr('class', 'd-none');
+      $('#repayment-starter-pane').attr('class', 'd-none');
+      $('#repayment-spinner').attr('class', 'card-body');
+
+      function showResults() {
+        $('#repayment-spinner').attr('class', 'd-none');
+
+        $('#repayment-results-pane').attr('class', 'card-body');
+
+        $('#repayment-pv-used').html($('#repayment-range').val());
+        $('#repayment-mr-used').html($('#monthly-repayment-val').val());
+      }
+
+      setTimeout(showResults, 350)
+
     });
 });

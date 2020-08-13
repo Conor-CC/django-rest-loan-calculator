@@ -5,6 +5,10 @@ $(document).ready(() => {
     $('#content-window').attr('style', 'filter: blur(4px); -webkit-filter: blur(4px);');
   });
 
+  $('#dropdown-menu').on('hide.bs.dropdown', function () {
+    $('#content-window').attr('style', '');
+  });
+
   $('#monthly-repayment-selector').on('click', function(){
     let attr = $("#monthly-repayment-content").attr("class");
     if (attr.indexOf("d-none") > -1) {
