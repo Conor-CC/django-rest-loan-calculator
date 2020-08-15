@@ -16,8 +16,7 @@ can have their parameters tweaked by modifying `cflow/loanCalc/config.py`. This
 configuration file also allows for the specification of whether or not the result
 of a certain calculation should be saved to the database or not with the 'save_results'
 configuration option as seen below ('save_results' is set to False by default for
-all calculation types). Please note that the work under the `sample-UI/` directory is
-a still in progress.
+all calculation types).
 
 ```python
 # cflow/loanCalc/config.py
