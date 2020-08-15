@@ -1,4 +1,4 @@
-# **Django REST Loan Calculator Application for Capitalflow**
+# **Django REST Loan Calculator Application**
 
 Django REST Loan Calculator Application is used for the resolution and storage of the following calculations/operations pertaining to loans:
 
