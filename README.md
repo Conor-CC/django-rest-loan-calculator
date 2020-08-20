@@ -1,6 +1,6 @@
 # **Django REST Loan Calculator Application**
 
-Django REST Loan Calculator Application is used for the resolution and storage of the following calculations/operations pertaining to loans:
+Django REST Loan Calculator Application is used for the resolution and optional storage of a number of calculations/operations pertaining to loans. This is a basic application for experimentation with the manipulation of views and serializers rather than user profiles, authentication and test-driven development. The following operations are available to the loan calculator.  
 
 - **Monthly Repayment Calculator**, based on the Principal (loan_amount) and number
   of repayment Periods (no_repayments). Based on the Annuity Formula.
